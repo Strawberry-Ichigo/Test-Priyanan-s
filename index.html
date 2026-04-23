@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Priyanan's Website</title>
+
+<style>
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #F6DDBD;
+    text-align: center;
+    padding-top: 40px;
+}
+
+.glass {
+    background: rgba(255,255,255,0.0001);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+/* 按壓動畫 */
+.pressable {
+    transition: 
+        transform 0.01s ease,
+        box-shadow 0.01s ease,
+        filter 0.01s ease;
+    -webkit-tap-highlight-color: transparent;   
+}
+
+.pressable:active {
+    transform: scale(0.97);
+    filter: brightness(0.95);
+    box-shadow: 
+        inset 0 2px 6px rgba(0,0,0,0.15),
+        inset 0 -2px 6px rgba(255,255,255,0.25);
+}
+
+/* 裝飾 */
+.deco {
+    position: fixed;
+    width: 120px;
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+.d1 { top: 10px; left: 10px; }
+.d2 { top: 10px; right: 10px; }
+.d3 { bottom: 10px; left: 10px; }
+.d4 { bottom: 10px; right: 10px; }
+.d5 { bottom: 80px; left: 50%; transform: translateX(-50%); width: 180px}
+
+/* 頭像 */
+.avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 65%;
+    transform: scale(1.1);
+    border: 5px solid rgba(255,255,255,0.6);
+}
+
+/* 名字 */
+.name-th {
+    font-size: 40px;
+    color: #7A4E2D;
+    margin-top: 15px;
+}
+
+.name-en {
+    font-size: 25px;
+    color: #9C6B45;
+    margin-top: 4px;
+}
+
+/* 按鈕 */
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    width: 85%;
+    max-width: 600px;
+    margin: 25px auto;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px;
+    text-decoration: none;
+    color: #5A3E2B;
+    font-weight: 600;
+    border-radius: 18px;
+}
+
+.btn img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+/* 抗議事項 */
+.protests-box {
+    width: 85%;
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.protest-title {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    padding: 20px 0;
+}
+
+.protest-title-th {
+    font-size: 30px;
+    font-weight: 600;
+    color: #5A3E2B;
+    letter-spacing: 0.5px;
+}
+
+.protest-title-tw {
+    font-size: 25px;
+    font-weight: 400;
+    color: #5A3E2B;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+}
+
+.protest-dot {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #dd0101;
+    border-radius: 50%;
+    opacity: 0;
+}
+
+.protest-dot.tl { top: 0; left: 0; }
+.protest-dot.tr { top: 0; right: 0; }
+.protest-dot.bl { bottom: 0; left: 0; }
+.protest-dot.br { bottom: 0; right: 0; }
+
+@keyframes protest-blink-a {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+@keyframes protest-blink-b {
+    0%, 49% { opacity: 0; }
+    50%, 100% { opacity: 1; }
+}
+
+.protest-dot.tl,
+.protest-dot.br {
+    animation: protest-blink-a 2s infinite;
+}
+
+.protest-dot.tr,
+.protest-dot.bl {
+    animation: protest-blink-b 2s infinite;
+}
+
+.protest-card {
+    padding: 20px 12px 20px 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.2);
+    margin-top: 15px;
+    position: relative;
+    padding: 60px 0;
+}
+
+.protest-line {
+    margin: 6px 0;
+}
+
+.protest-line-th {
+    font-size: 30px;
+    font-weight: 600;
+    color: #c79c7b;
+    letter-spacing: 0.5px;
+}
+
+.protest-line-tw {
+    font-size: 28px;
+    font-weight: 500;
+    color: #c79c7b;
+    margin-top: 5px;
+    letter-spacing: 0.5px;
+}
+
+.protest-x {
+    position: absolute;
+    font-size: 35px;
+    color: #c79c7b;
+    opacity: 0;
+    font-weight: 1000;
+}
+
+.protest-x.tl { top: 10px; left: 15px; }
+.protest-x.tr { top: 10px; right: 15px; }
+.protest-x.bl { bottom: 10px; left: 15px; }
+.protest-x.br { bottom: 10px; right: 15px; }
+
+@keyframes protest-x-blink-a {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+@keyframes protest-x-blink-b {
+    0%, 49% { opacity: 0; }
+    50%, 100% { opacity: 1; }
+}
+
+.protest-x.tl,
+.protest-x.br {
+    animation: protest-x-blink-a 2s infinite;
+
+}
+
+.protest-x.tr,
+.protest-x.bl {
+    animation: protest-x-blink-b 2s infinite;
+}
+
+/* 穿著 */
+.clothing-box {
+    width: 85%;
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.clothing-promotion {
+    margin-bottom: 20px;
+    position: relative;
+    padding: 30px 0;
+}
+
+.clothing-promotion-th {
+    font-size: 30px;
+    font-weight: 600;
+    color: #dd0101;
+    letter-spacing: 0.5px;
+}
+
+.clothing-promotion-tw {
+    font-size: 28px;
+    font-weight: 400;
+    color: #dd0101;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+}
+
+.clothing-dot {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #dd0101;
+    border-radius: 50%;
+    opacity: 0;
+}
+
+.clothing-dot.tl { top: 0; left: 0; }
+.clothing-dot.tr { top: 0; right: 0; }
+.clothing-dot.bl { bottom: 0; left: 0; }
+.clothing-dot.br { bottom: 0; right: 0; }
+
+@keyframes clothing-blink-a {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+@keyframes clothing-blink-b {
+    0%, 49% { opacity: 0; }
+    50%, 100% { opacity: 1; }
+}
+
+.clothing-dot.tl,
+.clothing-dot.br {
+    animation: clothing-blink-a 2s infinite;
+}
+
+.clothing-dot.tr,
+.clothing-dot.bl {
+    animation: clothing-blink-b 2s infinite;
+}
+
+.clothing-card {
+    padding: 20px 12px 20px 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.2);
+    margin-top: 15px;
+}
+.clothing-title-th {
+    color: #5A3E2B;
+    font-size: 19px;
+    font-weight: 600;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+}
+
+.clothing-title-tw {
+    color: #5A3E2B;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.clothing-line-th {
+    color: #8B6A50;
+    font-size: 25px;
+    font-weight: 600;
+    margin-top: 20px;
+    letter-spacing: 0.5px;
+}
+
+.clothing-line-tw {
+    color: #8B6A50;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+}
+
+/* 自我介紹 */
+.profile-box {
+    width: 85%;
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.profile-content {
+    text-align: center;
+}
+
+.profile-line-th {
+    font-size: 19px;
+    font-weight: 400;
+    color: #5A3E2B;
+    margin: 8px 0;
+    letter-spacing: 0.5px;
+}
+
+.profile-line-tw {
+    font-size: 17px;
+    font-weight: 300;
+    color: #5A3E2B;
+    margin-top: 8px;
+    margin: 10px 0;
+    letter-spacing: 0.5px;
+}
+
+/* 成就 */
+.achievements-box {
+    width: 85%;
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.achievement-title-th {
+    font-size: 30px;
+    font-weight: 600;
+    color: #5A3E2B;
+    letter-spacing: 0.5px;
+}
+
+.achievement-title-tw {
+    font-size: 25px;
+    font-weight: 400;
+    color: #5A3E2B;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+
+}
+
+.achievement-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.achievement-card {
+    padding: 10px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.2);
+}
+
+.event-th {
+    font-size: 19px;
+    font-weight: 600;
+    color: #5A3E2B;
+    letter-spacing: 0.5px;
+}
+
+.event-tw {
+    font-size: 16px;
+    font-weight: 600;
+    color: #5A3E2B;
+    letter-spacing: 0.5px;
+}
+
+.date {
+    font-size: 15px;
+    font-weight: 400;
+    color: #8B6A50;
+    margin-top: 5px;
+    letter-spacing: 0.5px;
+}
+
+.achievement-item {
+    text-align: center;
+}
+
+/* 115年旅行地點 */
+.travel-box {
+    width: 85%;
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.travel-title-th {
+    font-size: 30px;
+    font-weight: 600;
+    color: #5A3E2B;
+    letter-spacing: 0.5px;
+}
+
+.travel-title-tw {
+    font-size: 25px;
+    font-weight: 400;
+    color: #5A3E2B;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+}
+
+.travel-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.travel-card {
+    padding: 10px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.2);
+    text-align: center;
+}
+
+.travel-th {
+    font-size: 19px;
+    font-weight: 600;
+    color: #5A3E2B;
+    letter-spacing: 0.5px;
+}
+
+.travel-tw {
+    font-size: 16px;
+    font-weight: 600;
+    color: #5A3E2B;
+    letter-spacing: 0.5px;
+}
+
+.travel-date {
+    font-size: 15px;
+    font-weight: 400;
+    color: #8B6A50;
+    margin-top: 5px;
+    letter-spacing: 0.5px;
+}
+
+/* footer */
+.footer {
+    margin: 40px 0 20px;
+    color: #6b4a34;
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    white-space: pre-line;
+}
+
+/* 二級菜單遮罩 */
+.sub-glass-overlay {
+    position: fixed;
+    inset: 0;
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s ease;
+    z-index: 999;
+}
+
+.sub-glass-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 二級玻璃 */
+.sub-glass {
+    background: rgba(255,255,255,0.0001);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+.sub-glass-overlay.active .sub-glass {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* 抗議事項二級 */
+.sub-protest-box {
+    width: 75%;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 25px;
+    text-align: center;
+}
+
+.sub-protest-item {
+    margin-bottom: 25px;
+}
+
+.sub-protest-line-th {
+    font-size: 28px;
+    font-weight: 600;
+    color: #5A3E2B;
+    letter-spacing: 0.5px;
+}
+
+.sub-protest-line-tw {
+    font-size: 25px;
+    font-weight: 400;
+    color: #5A3E2B;
+    margin-top: 5px;
+    letter-spacing: 0.5px;
+}
+
+.sub-protest-img {
+    display: block;
+    margin: 30px auto 0;
+    width: 200px;
+    border-radius: 20px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+/* 穿著二級 */
+.sub-clothing-box {
+    width: 75%;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 25px;
+    text-align: center;
+}
+
+.sub-clothing-img {
+    display: block;
+    margin: 30px auto 0;
+    width: 200px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+}
+
+.sub-clothing-item {
+    margin-bottom: 25px;
+}
+
+.sub-clothing-line-th {
+    font-size: 28px;
+    font-weight: 600;
+    color: #5A3E2B;
+    letter-spacing: 0.5px;
+}
+
+.sub-clothing-line-tw {
+    font-size: 25px;
+    font-weight: 400;
+    color: #5A3E2B;
+    margin-top: 5px;
+    letter-spacing: 0.5px;
+}
+
+/* 電腦適配 */
+@media (min-width: 768px) {
+
+    .buttons {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .achievement-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .travel-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+/* 手機適配 */
+@media (max-width: 768px) {
+    
+    .d5 {
+        bottom: 150px;
+        width: 120px;
+    }
+    
+    .protest-card {
+        padding: 75px 0;
+    }
+
+    .protest-x {
+        font-size: 50px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<!-- 裝飾 -->
+<img src="deco1.PNG" class="deco d1">
+<img src="deco2.PNG" class="deco d2">
+<img src="deco3.PNG" class="deco d3">
+<img src="deco4.PNG" class="deco d4">
+<img src="deco5.PNG" class="deco d5">
+
+<!-- 頭像 -->
+<img src="avatar.PNG" class="avatar">
+
+<!-- 名字 -->
+<div class="name-th">น.ส.ปรียานันท์ เจริญสุข</div>
+<div class="name-en">Priyanan Charoensuk</div>
+
+<!-- 按鈕 -->
+<div class="buttons">
+
+    <a href="https://google.com" class="btn glass pressable">
+        <img src="telegram.PNG"> Telegram
+    </a>
+
+    <a href="https://google.com" class="btn glass pressable">
+        <img src="line.PNG"> Line
+    </a>
+
+    <a href="https://google.com" class="btn glass pressable">
+        <img src="whatsapp.PNG"> WhatsApp
+    </a>
+
+    <a href="https://google.com" class="btn glass pressable">
+        <img src="instagram.PNG"> Instagram
+    </a>
+
+    <a href="https://google.com" class="btn glass pressable">
+        <img src="facebook.PNG"> Facebook
+    </a>
+
+    <a href="https://google.com" class="btn glass pressable">
+        <img src="tiktok.PNG"> TikTok
+    </a>
+
+</div>
+
+<!-- 抗議事項 -->
+<div class="protests-box glass pressable" onclick="openMenu('sub-protest')">
+
+    <div class="protest-title">
+
+        <span class="protest-dot tl"></span>
+        <span class="protest-dot tr"></span>
+        <span class="protest-dot bl"></span>
+        <span class="protest-dot br"></span>
+
+        <div class="protest-title-th">ประท้วง</div>
+        <div class="protest-title-tw">抗議</div>
+
+    </div>
+
+    <div class="protest-card">
+
+        <span class="protest-x tl">✕</span>
+        <span class="protest-x tr">✕</span>
+        <span class="protest-x bl">✕</span>
+        <span class="protest-x br">✕</span>
+
+        <div class="protest-line-th">ขณะนี้ &nbspยังไม่มีเรื่องที่ต้องประท้วง</div>
+        <div class="protest-line-tw">目前 &nbsp沒有要抗議的事項</div>
+
+    </div>
+
+</div>
+
+<!-- 穿著 -->
+<div class="clothing-box glass pressable" onclick="openMenu('sub-clothing')">
+
+    <div class="clothing-promotion">
+
+        <span class="clothing-dot tl"></span>
+        <span class="clothing-dot tr"></span>
+        <span class="clothing-dot bl"></span>
+        <span class="clothing-dot br"></span>
+
+        <div class="clothing-promotion-th">ห้ามแทรกแซงเรื่องการแต่งกาย</div>
+        <div class="clothing-promotion-th">นี่คือขอบเขตขั้นต่ำของการสื่อสารทั้งหมด</div>
+        <div class="clothing-promotion-tw">不要干涉穿著</div>
+        <div class="clothing-promotion-tw">這是一切交流的底線</div>
+
+    </div>
+
+    <div class="clothing-card">
+        <div class="clothing-title-th">ตั้งแต่วันที่ 30 ต.ค. พ.ศ.2565 / ปีสาธารณรัฐจีน.111 เป็นต้นไป</div>
+        <div class="clothing-title-tw">自 民國111年 / 佛歷2565年 10月30日起</div>
+        <div class="clothing-line-th">100% &nbspไม่ใส่กางเกงขายาว</div>
+        <div class="clothing-line-tw">100% &nbsp不穿長褲</div>
+        <div class="clothing-line-th">100% &nbspใส่กระโปรงสั้นปีนเขา+ขี่จักรยาน</div>
+        <div class="clothing-line-tw">100% &nbsp穿短裙爬山＋騎車</div>
+    </div>
+
+</div>
+
+<!-- 個人介紹 -->
+<div class="profile-box glass pressable">
+
+    <div class="profile-content">
+
+        <div class="profile-line-th">วัดดีค่าาา &nbspหนูชื่อฟ้านะคะ &nbspเกิดปี พ.ศ.2548 /
+             ปีสาธารณรัฐจีน.94 &nbspปัจจุบันนี้อาศัยที่ไทย &nbspสามารถใช้ ภาษาไทย หรือ ภาษาจีนตัวเต็ม
+             คุยกับหนูได้เลยค่ะ &nbspช่วงนี้กำลังพยายามพัฒนาทักษะภาษาอังกฤษอยู่นะคะ</div>
+        <div class="profile-line-th">สู้ๆด้วยกันนะ !</div>
+        <div class="profile-line-tw">你好 我是ฟ้า &nbsp民國94年/佛歷2548年 生 &nbsp目前居住在泰國
+             &nbsp可以以 泰語 或 繁體中文 與我交流 &nbsp正在努力提高英語能力ing</div>
+        <div class="profile-line-tw">一起加油吧 !</div>
+
+    </div>
+
+</div>
+
+<!-- 成就 -->
+<div class="achievements-box glass pressable">
+
+    <h3 class="achievements-title">
+        <div class="achievement-title-th">ครามสำเร็จ</div>
+        <div class="achievement-title-tw">成就</div>
+    </h3>
+
+    <div class="achievement-grid">
+
+        <div class="achievement-card">
+            <div class="event-th">ใส่กระโปรงสั้นปีนเขา</div>
+            <div class="event-tw">穿短裙爬山</div>
+            <div class="date">14/08/ 2568BE 114ROC</div>
+        </div>
+
+        <div class="achievement-card">
+            <div class="event-th">ใส่กระโปรงสั้นขี่จักรยาน</div>
+            <div class="event-tw">穿短裙騎車</div>
+            <div class="date">09/12/ 2567BE 113ROC</div>
+        </div>
+
+        <div class="achievement-card">
+            <div class="event-th">ใช้ภาษาไทยในชีวิตประจำวัน</div>
+            <div class="event-tw">日常轉用泰語</div>
+            <div class="date">31/03/ 2568BE 114ROC</div>
+        </div>
+
+        <div class="achievement-card">
+            <div class="event-th">ไม่เข้าเมืองซูโจวหากไม่จำเป็น</div>
+            <div class="event-tw">非必要不入苏州</div>
+            <div class="date">05/03/ 2567BE 113ROC</div>
+        </div>
+
+        <div class="achievement-card">
+            <div class="event-th">อาศัยอยู่คนเดียว</div>
+            <div class="event-tw">单独居住</div>
+            <div class="date">06/02/ 2566BE 112ROC</div>
+        </div>
+
+        <div class="achievement-card">
+            <div class="event-th">เริ่มไม่ใส่กางเกงทุกชนิด ยกเว้นเลกกิ้ง</div>
+            <div class="event-tw">开始拒穿打底裤外一切裤子</div>
+            <div class="date">30/10/ 2565BE 111ROC</div>
+        </div>
+
+        <div class="achievement-card">
+            <div class="event-th">ไม่ติดต่อ ไม่ร่วมือ</div>
+            <div class="event-tw">不接触不合作</div>
+            <div class="date">29/08/ 2564BE 110ROC</div>
+        </div>
+
+        <div class="achievement-card">
+            <div class="event-th">ยุติการติดต่อกับญาติ</div>
+            <div class="event-tw">不再与亲戚联络</div>
+            <div class="date">15/02/ 2563BE 109ROC</div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- 115年旅行地點 -->
+<div class="travel-box glass pressable">
+
+    <h3>
+        <div class="travel-title-th">สถานที่ท่องเที่ยว พ.ศ.2569</div>
+        <div class="travel-title-tw">民國115年 旅行地點</div>
+    </h3>
+
+    <div class="travel-grid">
+
+        <div class="travel-card">
+            <div class="travel-th">~กำลังเตรียมข้อมูลนี้อยู่~</div>
+            <div class="travel-tw">~正在準備數據中~</div>
+            <div class="travel-date">xx/xx ~ xx/xx</div>
+        </div>
+
+        <div class="travel-card">
+            <div class="travel-th">~กำลังเตรียมข้อมูลนี้อยู่~</div>
+            <div class="travel-tw">~正在準備數據中~</div>
+            <div class="travel-date">xx/xx ~ xx/xx</div>
+        </div>
+
+        <div class="travel-card">
+            <div class="travel-th">~กำลังเตรียมข้อมูลนี้อยู่~</div>
+            <div class="travel-tw">~正在準備數據中~</div>
+            <div class="travel-date">xx/xx ~ xx/xx</div>
+        </div>
+
+        <div class="travel-card">
+            <div class="travel-th">~กำลังเตรียมข้อมูลนี้อยู่~</div>
+            <div class="travel-tw">~正在準備數據中~</div>
+            <div class="travel-date">xx/xx ~ xx/xx</div>
+        </div>
+
+        <div class="travel-card">
+            <div class="travel-th">~กำลังเตรียมข้อมูลนี้อยู่~</div>
+            <div class="travel-tw">~正在準備數據中~</div>
+            <div class="travel-date">xx/xx ~ xx/xx</div>
+        </div>
+
+        <div class="travel-card">
+            <div class="travel-th">~กำลังเตรียมข้อมูลนี้อยู่~</div>
+            <div class="travel-tw">~正在準備數據中~</div>
+            <div class="travel-date">xx/xx ~ xx/xx</div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- footer -->
+<div class="footer">
+ติดต่อ
+聯絡
+support@charoensuk.uno
+</div>
+
+<!-- 抗議事項二級 -->
+<div id="sub-protest" class="sub-glass-overlay" onclick="closeMenu(event)">
+
+    <div class="sub-glass sub-protest-box">
+
+        <div class="sub-protest-item">
+            <div class="sub-protest-line-th">เมื่อมีเรื่องที่ประท้วง</div>
+            <div class="sub-protest-line-tw">當有抗議的事項時</div>
+        </div>
+
+        <div class="sub-protest-item">
+            <div class="sub-protest-line-th">ที่นี่จะแสดงรายละเอียดของประท้วง</div>
+            <div class="sub-protest-line-tw">這裡將會顯示抗議的具體內容</div>
+        </div>
+
+        <img src="protest.PNG" class="sub-protest-img">
+
+    </div>
+
+</div>
+
+<!-- 穿著二級 -->
+<div id="sub-clothing" class="sub-glass-overlay" onclick="closeMenu(event)">
+    
+    <div class="sub-glass sub-clothing-box">
+
+        <img src="clothing.PNG" class="sub-clothing-img">
+
+        <div class="sub-clothing-item">
+            <div class="sub-clothing-line-th">วันที่ 18 ส.ค. พ.ศ.2568 </div>
+            <div class="sub-clothing-line-th">/ ปีสาธารณรัฐจีน.114</div>
+            <div class="sub-clothing-line-tw">民國114年 / 佛歷2568年 8月18日</div>
+        </div>
+
+        <div class="sub-clothing-item">
+            <div class="sub-clothing-line-th">ใส่กระโปรงสั้นปีนเขา</div>
+            <div class="sub-clothing-line-tw">穿短裙爬山</div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    function openMenu(id) {
+        document.getElementById(id).classList.add("active");
+    }
+
+    function closeMenu(e) {
+        if (e.target.classList.contains("sub-glass-overlay")) {
+            e.currentTarget.classList.remove("active");
+        }
+    }
+
+</script>
+
+</body>
+</html>
